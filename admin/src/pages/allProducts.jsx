@@ -14,7 +14,6 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import debounce from "lodash/debounce";
-import Sidebar from "../components/Sidebar";
 import toast from "react-hot-toast"; // Import react-hot-toast
 
 const AllProducts = () => {

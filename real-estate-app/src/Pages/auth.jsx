@@ -1,6 +1,8 @@
 import { Eye, EyeOff, Mail, User, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { loginUser, registerUser } from "../services/api";
+import { useAuthContext } from "../Components/sellerComponents/AuthContext";
+import { useNavigate } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
@@ -9,7 +11,13 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(""); // 'success' or 'error'
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+
+  if (user) {
+    navigate("/");
+    return null;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,10 +52,11 @@ const Auth = () => {
       let response;
       if (isLogin) {
         response = await loginUser(loginData);
-        if (response.message === "Login successful") window.location.href = '/';
+        if (response.message === "Login successful") window.location.href = "/";
       } else {
         response = await registerUser(registerData);
-        if (response.message === "User created successfully") window.location.href = '/';
+        if (response.message === "User created successfully")
+          window.location.href = "/";
       }
 
       console.log("Response:", response); // Log response for debugging

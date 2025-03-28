@@ -6,7 +6,9 @@ export function useAuth() {
   const [authState, setAuthState] = useState({
     user: null,
     loading: true,
-    error: null
+    error: null,
+    isAuthenticated: false,
+
   });
 
   const updateUser = useCallback((newUserData) => {
@@ -32,7 +34,8 @@ export function useAuth() {
       setAuthState({
         user: data.user,
         loading: false,
-        error: null
+        error: null,
+        isAuthenticated: true,
       });
       
     } catch (error) {
@@ -56,6 +59,7 @@ export function useAuth() {
       
       setAuthState({
         user: null,
+        isAuthenticated: false,
         loading: false,
         error: null
       });

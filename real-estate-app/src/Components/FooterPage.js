@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const FooterPage = () => {
   return (
@@ -58,10 +59,10 @@ const FooterPage = () => {
           <div>
             <h3 className="font-bold my-10 mb-4">Our Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-gray-300">Services</a></li>
-              <li><a href="#" className="hover:text-gray-300">About us</a></li>
-              <li><a href="#" className="hover:text-gray-300">News</a></li>
-              <li><a href="#" className="hover:text-gray-300">FAQs</a></li>
+              <li><Link to="/services" className="hover:text-gray-300">Services</Link></li>
+              <li><Link to="/about" className="hover:text-gray-300">About Us</Link></li>
+              <li><Link to="/news" className="hover:text-gray-300">News</Link></li>
+              <li><Link to="/faqs" className="hover:text-gray-300">FAQs</Link></li>
             </ul>
           </div>
 
@@ -69,9 +70,9 @@ const FooterPage = () => {
           <div>
             <h3 className="font-bold my-10 mb-4">Support</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-gray-300">Help Center</a></li>
-              <li><a href="#" className="hover:text-gray-300">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-gray-300">Terms of Use</a></li>
+              <li><Link to="/help-center" className="hover:text-gray-300">Help Center</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-gray-300">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-use" className="hover:text-gray-300">Terms of Use</Link></li>
             </ul>
           </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Kigali from '../Assets/Kigali.png'
+import Kigali from '../Assets/Kigali.png';
 
 const LandingPage = () => {
   const [formData, setFormData] = useState({
@@ -8,10 +8,44 @@ const LandingPage = () => {
     phone: '',
     message: ''
   });
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const API_URL = "http://localhost:5000"; 
 
-  const handleSubmit = (e) => {
+
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
+    setLoading(true); // set loading true while sending email
+
+    try {
+      const response = await fetch(`${API_URL}/api/contact/enquiry/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      if (response.ok) {
+        setStatus("Email sent successfully!");
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          message: ''
+        });
+      } else {
+        setStatus(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setStatus("An unexpected error occurred.");
+    }
+    
+    setLoading(false); // reset loading state after request finishes
     console.log('Form submitted:', formData);
   };
 
@@ -117,10 +151,12 @@ const LandingPage = () => {
               <button
                 type="submit"
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-md transition-colors duration-200"
+                disabled={loading}
               >
-                Get in touch
+                {loading ? "Sending..." : "Get in touch"}
               </button>
             </form>
+            {status && <p className="mt-4 text-center text-sm text-gray-700">{status}</p>}
           </div>
         </div>
       </div>

@@ -55,8 +55,8 @@ const Sidebar = () => {
     { to: "/messages", icon: <MessageSquare size={20} />, label: "Messages" },
     { to: "/customers", icon: <Users size={20} />, label: "Customers" },
     { to: "/analytics", icon: <BarChart3 size={20} />, label: "Analytics" },
-    { to: "/reports", icon: <FileText size={20} />, label: "Reports" },
-    { to: "/payments", icon: <CreditCard size={20} />, label: "Payments" },
+    { to: "/reports", icon: <FileText size={20} />, label: "Requests" },
+    { to: "/partners", icon: <CreditCard size={20} />, label: "Partners" },
     { to: "/notifications", icon: <Bell size={20} />, label: "Notifications" },
     { to: "/settings", icon: <Settings size={20} />, label: "Settings" },
   ];

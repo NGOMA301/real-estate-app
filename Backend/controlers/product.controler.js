@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import asyncHandler from "express-async-handler";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -136,6 +138,77 @@ export const getAllProducts = async (req, res) => {
     });
   }
 };
+
+//get seller products
+export const getSellerProducts = async (req, res) => {
+  try {
+    const { page = 1, limit = 12, category, search, sort, type, status } = req.query;
+    const sellerId = req.user._id; 
+    console.log(sellerId);
+
+    // Convert query parameters to proper formats
+    const pageNumber = Math.max(1, parseInt(page, 10));
+    const limitNumber = Math.max(1, parseInt(limit, 10));
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Build filter object - always include the seller's ID
+    const filter = {
+      createdBy: sellerId // Only show products created by this seller
+    };
+
+    // Add additional filters if provided
+    if (category) {
+      filter.category = { $in: category.split(",") };
+    }
+
+    if (search) {
+      filter.title = { $regex: search, $options: "i" };
+    }
+
+    if (type) {
+      filter.type = type;
+    }
+
+    if (status && status !== 'all') {
+      filter.status = status;
+    }
+
+    // Sorting configuration
+    const sortOptions = {};
+    if (sort) {
+      const [key, order] = sort.split(":");
+      sortOptions[key] = order === "desc" ? -1 : 1;
+    }
+
+    // Fetch products with filtering, pagination, and sorting
+    const products = await Product.find(filter)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limitNumber)
+      .populate('createdBy', 'name email'); // Optional: populate seller info
+
+    // Get total count of products matching the filter
+    const totalProducts = await Product.countDocuments(filter);
+
+    res.status(200).json({
+      message: "Products retrieved successfully",
+      products,
+      pagination: {
+        total: totalProducts,
+        page: pageNumber,
+        pages: Math.ceil(totalProducts / limitNumber),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching products",
+      error: error.message,
+    });
+  }
+};
+
+
 
 export const updateProduct = async (req, res) => {
   try {
@@ -398,3 +471,43 @@ export const getAllWishlist = async (req, res) => {
       .json({ message: "An error occurred", error: error.message });
   }
 };
+
+
+// @route  GET /api/properties/search
+export const searchProperties = asyncHandler(async (req, res) => {
+  const { lookingFor, location, propertyType, propertySize, budget } = req.query;
+
+  const query = {};
+
+  if (location) {
+    query.location = { $regex: location, $options: "i" };
+  }
+
+  if (propertyType) {
+    query.type = propertyType;
+  }
+
+  if (budget) {
+    const maxPrice = Number(budget);
+    if (!isNaN(maxPrice)) {
+      query.price = { $lte: maxPrice };
+    }
+  }
+
+  if (lookingFor) {
+    query.status = lookingFor;
+  }
+
+  // Optionally filter by property size (if interpreted as minimum number of beds)
+  if (propertySize) {
+    const minBeds = Number(propertySize);
+    if (!isNaN(minBeds)) {
+      query.beds = { $gte: minBeds };
+    }
+  }
+
+  // Execute the query
+  const properties = await Product.find(query);
+
+  res.json(properties);
+});

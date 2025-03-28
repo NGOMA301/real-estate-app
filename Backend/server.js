@@ -10,16 +10,18 @@ import cookieParser from "cookie-parser";
 // Local imports
 import { authRouter } from "./routes/authRoutes.js";
 import { productRouter } from "./routes/productRoutes.js";
-import { chatRouter } from "./routes/chatRoutes.js"; // our new chat routes
-import conversationModel from "./models/conversation.model.js";
-import messageModel from "./models/message.model.js";
+import { chatRouter } from "./routes/chatRoutes.js"; 
+import { sellerRouter } from "./routes/sellerRouter.js"; 
+import { otherRoute } from "./routes/otherRoute.js";
+import './root.config.js'
+
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174" ],
     credentials: true,
   })
 );
@@ -29,6 +31,8 @@ app.use(cookieParser());
 app.use("/uploads/product-image", express.static("uploads/product-image"));
 app.use("/uploads/display-image", express.static("uploads/display-image"));
 app.use("/uploads/userImages", express.static("uploads/userImages"));
+app.use("/uploads/sellerDocuments", express.static("uploads/sellerDocuments"));
+app.use("/uploads/partners", express.static("uploads/partners"));
 
 // MongoDB Connection
 mongoose
@@ -40,6 +44,8 @@ mongoose
 app.use("/api", authRouter);
 app.use("/api/product", productRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/seller", sellerRouter);
+app.use("/api/contact", otherRoute);
 
 // Create HTTP server and integrate with socket.io
 const server = http.createServer(app);

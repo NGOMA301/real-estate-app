@@ -15,8 +15,14 @@ import {
   removeFromWishlist,
   getAllWishlist,
   getProductByDId,
+  getSellerProducts,
+  searchProperties,
 } from "../controlers/product.controler.js";
-import { authenticate, authenticateAdminToken } from "../middlewares/auth.middleware.js";
+import {
+  authenticate,
+  authenticateAdminToken,
+  authenticateUserOrAdmin,
+} from "../middlewares/auth.middleware.js";
 
 export const productRouter = express.Router();
 
@@ -52,7 +58,7 @@ const upload = multer({ storage });
 // Product creation route
 productRouter.post(
   "/new",
-  authenticateAdminToken,
+  authenticateUserOrAdmin,
   upload.fields([
     { name: "displayImage", maxCount: 1 },
     { name: "images", maxCount: 10 },
@@ -73,6 +79,7 @@ productRouter.put(
 
 //get all products
 productRouter.get("/all", getAllProducts);
+productRouter.get("/seller/all", authenticate, getSellerProducts);
 
 //get single product
 productRouter.get("/single/:id", getProductById);
@@ -86,7 +93,13 @@ productRouter.get("/details/i/:id", getProductByDId);
 productRouter.post("/wishlist/add-to-wishlist", authenticate, addToWishlist);
 
 // Remove from wishlist
-productRouter.delete("/wishlist/remove/:productId", authenticate, removeFromWishlist);
+productRouter.delete(
+  "/wishlist/remove/:productId",
+  authenticate,
+  removeFromWishlist
+);
 
 // Get user's wishlist
 productRouter.get("/wishlist/all", authenticate, getAllWishlist);
+productRouter.get("/search", searchProperties);
+

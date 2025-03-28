@@ -36,7 +36,7 @@ const navItems = [
     children: rentOptions,
   },
   { id: "auction", label: "Auction", href: "/auction" },
-  { id: "contact", label: "Contact", href: "/contact" },
+  { id: "contact", label: "Contact", href: "/contact-us" },
 ];
 
 export const Navbar = () => {

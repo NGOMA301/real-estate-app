@@ -1,9 +1,5 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { Users } from 'lucide-react'
-
-import Sidebar from "@/components/Sidebar"
 import { TopLoader } from "@/components/TopLoader"
 import { initializeSocket } from "@/api/api" 
 import { useAuthStore } from "@/store/authStore"

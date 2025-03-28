@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     profileImage: String,
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "admin","seller"],
       default: "user",
     },
     lastAccessedAt: Date,
@@ -25,6 +25,23 @@ const userSchema = new mongoose.Schema(
     twoFactorCode: String,
     twoFactorExpires: Date,
     is2FAVerified: { type: Boolean, default: false },
+    // for seller
+    sellerStatus: {
+      type: String,
+      enum: ["none","pending", "approved", "rejected"],
+      default: "none",
+    },
+    sellerApplication: {
+      licenseNumber: String,
+      agencyName: String,
+      yearsOfExperience: Number,
+      officeAddress: String,
+      website: String,
+      document: String, 
+      submittedAt: Date,
+      rejectedAt: Date,
+      reapplyAfter: Date,
+    },
   },
   {
     timestamps: true,

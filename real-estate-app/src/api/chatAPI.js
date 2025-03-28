@@ -38,7 +38,6 @@ export const sendMessage = async (messageData) => {
     const response = await api.post("/chat/message", messageData, {
       withCredentials: true,
     });
-    console.log(response)
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Failed to send message";
@@ -61,7 +60,6 @@ export const getMessages = async (conversationId) => {
     const response = await api.get(`/chat/messages/${conversationId}`, {
       withCredentials: true,
     });
-    console.log(response)
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Failed to get messages";

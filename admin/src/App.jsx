@@ -14,6 +14,8 @@ import AdminProfile from "./pages/AdminProfile";
 import AdminChatPage from "./pages/AdminChatPage";
 import { Toaster } from "sonner";
 import DashboardLayout from "./components/DashboardLayout";
+import SellerApplication from "./pages/sellerApplications";
+import Partners from "./components/Partners";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,8 @@ function App() {
               <Route path="/new-product" element={<CreateProductForm />} />
               <Route path="/update-product/:id" element={<UpdateProduct />} />
               <Route path="/customers" element={<AllCustomers />} />
+              <Route path="/reports" element={<SellerApplication />} />
+              <Route path="/partners" element={<Partners />} />
             </Route>
           </Route>
 

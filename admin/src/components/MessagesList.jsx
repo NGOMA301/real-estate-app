@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Clock, MessageSquare, Search, RefreshCw } from 'lucide-react';
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";

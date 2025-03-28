@@ -1,6 +1,6 @@
-import { useState } from "react"
-import { Search } from "lucide-react"
-import housevia from "../Assets/housevia.png"
+import { useState } from "react";
+import { Search } from "lucide-react";
+import housevia from "../Assets/housevia.png";
 
 const HomePage = () => {
   const [filters, setFilters] = useState({
@@ -9,13 +9,30 @@ const HomePage = () => {
     propertyType: "",
     propertySize: "",
     budget: "",
-  })
+  });
+  const [results, setResults] = useState([]);
+  const API_URL = 'http://localhost:5000'
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    console.log("Search filters:", filters)
-    // Here you would typically make an API call with the filters
-  }
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    // Build query string from the filters
+    const queryParams = new URLSearchParams();
+    if (filters.lookingFor) queryParams.append("lookingFor", filters.lookingFor);
+    if (filters.location) queryParams.append("location", filters.location);
+    if (filters.propertyType) queryParams.append("propertyType", filters.propertyType);
+    if (filters.propertySize) queryParams.append("propertySize", filters.propertySize);
+    if (filters.budget) queryParams.append("budget", filters.budget);
+
+    try {
+      const response = await fetch(`${API_URL}/api/product/search?${queryParams.toString()}`);
+      const data = await response.json();
+      console.log("Search filters:", filters);
+      console.log("Search results:", data);
+      setResults(data);
+    } catch (error) {
+      console.error("Error searching properties:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -45,10 +62,10 @@ const HomePage = () => {
                     value={filters.lookingFor}
                     onChange={(e) => setFilters({ ...filters, lookingFor: e.target.value })}
                   >
-                    <option value="">Select type</option>
-                    <option value="buying">Buy</option>
-                    <option value="rent">Rent</option>
-                    <option value="auction">Auction</option>
+                    <option value="">Choose</option>
+                    <option value="Available">Available</option>
+                    <option value="For Sale">Buy</option>
+                    <option value="Rental">Rent</option>
                   </select>
                 </div>
 
@@ -71,10 +88,12 @@ const HomePage = () => {
                     onChange={(e) => setFilters({ ...filters, propertyType: e.target.value })}
                   >
                     <option value="">Select type</option>
-                    <option value="house">House</option>
-                    <option value="apartment">Apartment</option>
-                    <option value="land">Land</option>
-                    <option value="commercial">Commercial</option>
+                    <option value="House">House</option>
+                    <option value="Office">Office</option>
+                    <option value="Land">Land</option>
+                    <option value="Apartment/Condo">Apartment</option>
+                    <option value="Commercial Space">Commercial</option>
+                    <option value="Industrial Property">Industrial Property</option>
                   </select>
                 </div>
 
@@ -115,9 +134,26 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Display Search Results */}
+      {results && results.length > 0 && (
+        <div className="max-w-4xl mx-auto p-10">
+          <h2 className="text-2xl font-bold mb-4">Search Results</h2>
+          <ul>
+            {results.map((property) => (
+              <li key={property._id} className="mb-4 p-4 border rounded-md">
+                <img src={`${API_URL}${property.displayImage}`} alt={property.title} className="w-full h-48 object-cover rounded-md mb-2" />
+                <h3 className="text-xl font-bold">{property.title}</h3>
+                <p className="text-gray-600">{property.description}</p>
+                <p className="text-gray-800 font-semibold">Price: ${property.price}</p>
+                <p className="text-gray-800 font-semibold">Location: {property.location}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
-
+export default HomePage;
