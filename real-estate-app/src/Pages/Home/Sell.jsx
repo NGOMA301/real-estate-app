@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import SellerApplication from "../../Components/SellerApplication";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import ApplicationStatus from "../../Components/ApplicationStatus";
 import RejectedStatus from "../../Components/RejectedStatus";
@@ -14,6 +14,7 @@ const Sell = () => {
   const handleReapply = () => {
     // Reset the seller status to allow reapplication
     user.sellerStatus = "none";
+    navigate("/sell",replace);
     toast.success("You can now submit a new application!");
   };
 

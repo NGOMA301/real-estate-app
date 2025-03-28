@@ -39,6 +39,7 @@ import News from "./Pages/footerPage/News";
 import FAQ from "./Pages/footerPage/Faqs";
 import PrivacyPolicy from "./Pages/footerPage/PrivacyPolicy";
 import TermsOfUse from "./Pages/footerPage/TermsOfUse";
+import SearchPage from "./Pages/search-page";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -64,6 +65,8 @@ const AppRoutes = () => {
         {/* wishlist page */}
         {/* end of wishlist page */}
         <Route path="/all" element={<AllProducts />} />
+        <Route path="/search" element={<SearchPage />} />
+
         <Route path="/product/:slug" element={<ProductDetails />} />
         <Route path="/contact-us" element={<ContactPage />} />
         <Route path="/Sell" element={<Sell />} />
