@@ -17,6 +17,9 @@ import {
   User,
   ChevronUp,
   MessageSquare,
+  Handshake,
+  Inbox,
+  ClipboardList,
 } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 
@@ -55,8 +58,8 @@ const Sidebar = () => {
     { to: "/messages", icon: <MessageSquare size={20} />, label: "Messages" },
     { to: "/customers", icon: <Users size={20} />, label: "Customers" },
     { to: "/analytics", icon: <BarChart3 size={20} />, label: "Analytics" },
-    { to: "/reports", icon: <FileText size={20} />, label: "Requests" },
-    { to: "/partners", icon: <CreditCard size={20} />, label: "Partners" },
+    { to: "/reports", icon: <ClipboardList   size={20} />, label: "Requests" },
+    { to: "/partners", icon: <Handshake  size={20} />, label: "Partners" },
     { to: "/notifications", icon: <Bell size={20} />, label: "Notifications" },
     { to: "/settings", icon: <Settings size={20} />, label: "Settings" },
   ];

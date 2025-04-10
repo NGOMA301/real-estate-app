@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, matchPath  } from "react-router-dom";
 import { Toaster } from "sonner";
 import Home from "./Pages/Home/Home";
 import AllProducts from "./Pages/Home/AllProducts";
@@ -40,16 +40,26 @@ import FAQ from "./Pages/footerPage/Faqs";
 import PrivacyPolicy from "./Pages/footerPage/PrivacyPolicy";
 import TermsOfUse from "./Pages/footerPage/TermsOfUse";
 import SearchPage from "./Pages/search-page";
+import UpdateProduct from "./Pages/sellerPages/updateProduct";
 
 const AppRoutes = () => {
   const location = useLocation();
   // Define paths where you don't want the Navbar
-  const hideNavbarPaths = ["/dashboard", "/seller/profile", "/all-products","/new-product","/messages"]; // add more if needed
+  const hideNavbarPaths = [
+    "/dashboard",
+    "/seller/profile",
+    "/all-products",
+    "/new-product",
+    "/messages",
+    "/update-product",
+  ]; // add more if needed
+  const isUpdateProductRoute = matchPath("/update-product/*", location.pathname);
+  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname) || isUpdateProductRoute;
 
   return (
     <>
       {/* Render Navbar only if current pathname is not in hideNavbarPaths */}
-      {!hideNavbarPaths.includes(location.pathname) && <Navbar />}
+      {!shouldHideNavbar && <Navbar />}
       <Toaster />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -90,6 +100,7 @@ const AppRoutes = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/seller/profile" element={<SellerProfile />} />
               <Route path="/all-products" element={<SellerProperties />} />
+              <Route path="/update-product/:id" element={<UpdateProduct />} />
               <Route path="/new-product" element={<CreateProductForm />} />
               <Route path="/messages" element={<SellerChatPage />} />
             </Route>

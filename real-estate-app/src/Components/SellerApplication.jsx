@@ -27,14 +27,13 @@ const SellerApplication = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const API_URL = "http://localhost:5000";
+  const navigate = useNavigate()
 
   // Reset errors when changing steps
   useEffect(() => {
     setErrors({});
   }, [step]);
 
- 
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -123,9 +122,6 @@ const SellerApplication = () => {
     }
   };
 
- 
-
-
   if (isSubmitted) {
     return (
       <motion.div
@@ -174,7 +170,7 @@ const SellerApplication = () => {
             </p>
           </div>
           <button
-            onClick={Navigate("/")}
+            onClick={() => navigate("/")}
             className="animated-button w-full"
           >
             Return to Home

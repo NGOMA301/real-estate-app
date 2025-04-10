@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import multer from "multer";
 import path from "path";
+import fs from "fs"
 
 import asyncHandler from "express-async-handler";
 import { config } from "dotenv";
@@ -81,6 +82,7 @@ export const uploadLogo = multer({ storage, fileFilter }).single("logo");
 
 
 export const uploadPartnerLogo = asyncHandler(async (req, res) => {
+  console.log("req file:",req.file)
   if (!req.file) {
     res.status(400);
     throw new Error("No file uploaded");
@@ -103,6 +105,33 @@ export const uploadPartnerLogo = asyncHandler(async (req, res) => {
     message: "Logo uploaded successfully",
     partner: newPartner,
   });
+});
+
+// DELETE controller to remove a partner and their logo
+export const deletePartnerLogo = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const partner = await Partner.findById(id);
+
+  if (!partner) {
+    res.status(404);
+    throw new Error("Partner not found");
+  }
+
+  // Get logo file path
+  const logoPath = path.join("uploads", "partners", path.basename(partner.logo));
+
+  // Delete the partner from the database
+  await partner.deleteOne();
+
+  // Remove logo file from disk
+  fs.unlink(logoPath, (err) => {
+    if (err) {
+      console.error("Error deleting logo file:", err.message);
+    }
+  });
+
+  res.json({ message: "Partner and logo deleted successfully" });
 });
 
 

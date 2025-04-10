@@ -120,6 +120,7 @@ const ProductDetails = () => {
   };
 
   const handleContactAgent = async () => {
+    if(!user) return toast.error("Please Login First!")
     try {
       const response = await axios.post(
         `${API_URL}/api/chat/conversation`,

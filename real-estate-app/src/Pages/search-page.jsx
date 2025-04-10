@@ -193,7 +193,7 @@ const SearchPage = () => {
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <h3 className="text-xl font-semibold mb-2">No properties found</h3>
                 <p className="text-gray-600 mb-4">Try adjusting your search criteria to find more properties.</p>
-                <img src="/placeholder.svg" alt="No results" className="max-w-xs mx-auto opacity-50" />
+                <img src="/no-result.png" alt="No results" className="max-w-xs mx-auto opacity-50" />
               </div>
             )}
           </>

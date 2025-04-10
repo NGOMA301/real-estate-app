@@ -136,7 +136,7 @@ export const Navbar = () => {
           >
             Sell
           </Link>
-          <div className="language-selector">
+          {/* <div className="language-selector">
             <LanguageSelector
               isOpen={isLanguageOpen}
               onToggle={(e) => {
@@ -147,12 +147,12 @@ export const Navbar = () => {
               selectedLanguage={selectedLanguage}
               onLanguageSelect={setSelectedLanguage}
             />
-          </div>
+          </div> */}
           {!loading && (
             <>
               {user ? (
                 <UserMenu
-                  lastName={user.name.split(" ").pop() || ""}
+                  lastName={user.name || ""}
                   isOpen={isUserMenuOpen}
                   onToggle={(e) => {
                     e.stopPropagation();
