@@ -37,7 +37,7 @@ const ProductPage = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:5000/api/product/all?${queryParams.toString()}`
+        `${process.env.REACT_APP_API_URL}/api/product/all?${queryParams.toString()}`
       );
       setListings(response.data.products);
     } catch (error) {

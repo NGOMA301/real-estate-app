@@ -22,7 +22,7 @@ export function ChatHeader({ conversation, onBack, currentUser }) {
         <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-lg font-medium text-gray-600 overflow-hidden">
           {otherParticipant?.profileImage ? (
             <img
-              src={`${"http://localhost:5000"}${otherParticipant.profileImage}` || "/placeholder.svg"}
+              src={`${process.env.REACT_APP_API_URL}${otherParticipant.profileImage}` || "/placeholder.svg"}
               alt={otherParticipant.name || "User"}
               className="w-full h-full object-cover"
             />

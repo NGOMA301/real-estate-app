@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-const API_URL = "http://localhost:5000";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export function MessageBubble({
   message,

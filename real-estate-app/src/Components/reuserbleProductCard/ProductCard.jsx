@@ -1,16 +1,15 @@
 import { Heart, Share2, MapPin, Bath, Bed } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
 const ProductCard = ({ product, onToggleWishlist, isWishlisted = false }) => {
-  const API_URL = "http://localhost:5000";
-  const CLIENT_URL = "http://localhost:3000";
+  const API_URL = process.env.REACT_APP_API_URL;
+  const CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
   const [isWishlistLoading, setIsWishlistLoading] = useState(false);
   const { user } = useAuth(); // Get authentication state
-  const navigate = useNavigate();
 
   const handleShare = async () => {
     try {

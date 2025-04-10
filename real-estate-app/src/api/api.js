@@ -1,5 +1,4 @@
-const API_REAL_TIME_BASE_URL = "http://localhost:5000";
-
+const API_REAL_TIME_BASE_URL = process.env.REACT_APP_API_URL;
 /////////////////////////////////////////////////////////////////////////////////
 // Socket.io connection setup
 let socket = null;

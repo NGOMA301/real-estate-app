@@ -17,13 +17,13 @@ const ChatInterface = () => {
       try {
         // Fetch product first to get createdBy
         const productResponse = await axios.get(
-          `http://localhost:5000/api/product/details/i/${productId}`
+          `${process.env.REACT_APP_API_URL}/api/product/details/i/${productId}`
         );
         setProduct(productResponse.data.product);
 
         // Then fetch conversation
         const conversationResponse = await axios.get(
-          `http://localhost:5000/api/chat/conversation/${productId}`,
+          `${process.env.REACT_APP_API_URL}/api/chat/conversation/${productId}`,
           { withCredentials: true }
         );
         setMessages(conversationResponse.data.messages);
@@ -43,7 +43,7 @@ const ChatInterface = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/chat/send/messages',
+        `${process.env.REACT_APP_API_URL}/api/chat/send/messages`,
         {
           productId,
           receiverId: product.createdBy, // Use product creator as receiver

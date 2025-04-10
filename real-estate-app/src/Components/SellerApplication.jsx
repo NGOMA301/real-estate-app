@@ -26,7 +26,7 @@ const SellerApplication = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const API_URL = "http://localhost:5000";
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate()
 
   // Reset errors when changing steps

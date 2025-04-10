@@ -34,7 +34,6 @@ const SellerProperties = () => {
         }${status !== "all" ? `&status=${status}` : ""}`,
         { withCredentials: true }
       );
-      console.log(data)
       return data;
       
     } catch (error) {

@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Send, RefreshCw, Info, Phone, Calendar, Mail, ArrowRight, MessageSquare, ImageIcon, Paperclip, X } from 'lucide-react';
 
-import { TopLoader } from "./TopLoader";
 import {  
   initializeSocket, 
   joinConversationRoom, 

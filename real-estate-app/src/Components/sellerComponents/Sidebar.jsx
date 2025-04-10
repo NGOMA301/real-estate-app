@@ -17,12 +17,11 @@ import {
   ChevronUp,
   MessageSquare,
 } from "lucide-react";
-import { useAuth } from "../../hooks/useAuth";
 import { useAuthContext } from "./AuthContext";
 
 
 
-const API_URL = "http://localhost:5000";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const NavItem = ({ to, icon, label, isActive, isCollapsed }) => {
   return (
@@ -43,7 +42,7 @@ const NavItem = ({ to, icon, label, isActive, isCollapsed }) => {
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [dropUpOpen, setDropUpOpen] = useState(false);
-  const { user, logout, loading } = useAuthContext();
+  const { user, logout } = useAuthContext();
   const location = useLocation();
   const dropUpRef = useRef(null);
 

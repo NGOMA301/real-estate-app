@@ -38,7 +38,7 @@ export const ImageGallery = ({ images = [], title }) => {
               }`}
             >
               <img
-                src={`http://localhost:5000${image}`}
+                src={`${process.env.REACT_APP_API_URL}${image}`}
                 alt={`${title} - View ${index + 1}`}
                 className="w-full h-20 object-cover aspect-auto"
               />
@@ -56,7 +56,7 @@ export const ImageGallery = ({ images = [], title }) => {
           onMouseMove={handleMouseMove}
         >
           <img
-            src={`http://localhost:5000${images[selectedImage]}`}
+            src={`${process.env.REACT_APP_API_URL}${images[selectedImage]}`}
             alt={`${title} - Main View`}
             className={`w-full h-full object-cover transition-transform duration-200 ${
               isZoomed ? "scale-150" : "scale-100"

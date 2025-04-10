@@ -15,7 +15,7 @@ import { MessageInput } from "./message-input"
 import { ChatHeader } from "./chat-header"
 import { useAuth } from "../../hooks/useAuth"
 
-const API_URL = "http://localhost:5000/api"
+const API_URL = process.env.REACT_APP_API_URL_REQ
 
 export function ChatInterface() {
   const [conversations, setConversations] = useState([])

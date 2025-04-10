@@ -11,7 +11,7 @@ const PartnersPage = () => {
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_URL = 'http://localhost:5000'
+  const API_URL = process.env.REACT_APP_API_URL
 
   // Fetch partners from backend
   useEffect(() => {

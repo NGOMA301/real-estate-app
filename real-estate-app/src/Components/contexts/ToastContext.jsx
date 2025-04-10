@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 
 
 
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+const ToastContext = createContext(undefined);
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
